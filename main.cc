@@ -1,6 +1,10 @@
 #include <iostream>
 
+void testCanBeCreated() {
+    std::cout << "testCanBeCreated" << std::endl;
+}
+
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    testCanBeCreated();
     return 0;
 }
