@@ -1,21 +1,20 @@
 #include <iostream>
 #include <string_view>
 
-class Test {
-public:
-    Test(std::string_view name) : mName(name), mResult(true) {}
-    void operator() ();
-
-private:
-    std::string mName;
-    bool mResult;
-};
-
-void Test::operator() () {
+#define TEST class Test { \
+public: \
+    Test(std::string_view name) : mName(name), mResult(true) {} \
+    void operator() (); \
+private: \
+    std::string mName; \
+    bool mResult; \
+}; \
+Test test("testCanBeCreated"); \
+void Test::operator() ()
+TEST {
         std::cout << mName << std::endl;
 }
 
-Test test("testCanBeCreated");
 
 int main() {
     test();
