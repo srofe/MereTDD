@@ -1,17 +1,35 @@
-#ifndef TEST_H
-#define TEST_H
+#ifndef MERETDD_TEST_H
+#define MERETDD_TEST_H
 
 #include <string_view>
+#include <vector>
 
-#define TEST class Test { \
+namespace MereTDD {
+    class TestInterface {
+    public:
+        virtual ~TestInterface() = default;
+        virtual void run() = 0;
+    };
+
+    std::vector<TestInterface*>& getTests() {
+        static std::vector<TestInterface*> tests;
+
+        return tests;
+    }
+} // namespace MereTDD
+
+#define TEST \
+class Test : public MereTDD::TestInterface { \
 public: \
-    Test(std::string_view name) : mName(name), mResult(true) {} \
-    void operator() (); \
+    Test(std::string_view name) : mName(name), mResult(true) { \
+        MereTDD::getTests().push_back(this); \
+    } \
+    void run() override; \
 private: \
     std::string mName; \
     bool mResult; \
 }; \
 Test test("testCanBeCreated"); \
-void Test::operator() ()
+void Test::run()
 
-#endif // TEST_H
+#endif // MERETDD_TEST_H

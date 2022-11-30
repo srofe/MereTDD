@@ -6,6 +6,8 @@ TEST {
 }
 
 int main() {
-    test();
+    for (auto *test : MereTDD::getTests()) {
+        test->run();
+    }
     return 0;
 }
