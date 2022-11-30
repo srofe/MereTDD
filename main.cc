@@ -1,10 +1,21 @@
 #include <iostream>
+#include <string_view>
 
-void testCanBeCreated() {
-    std::cout << "testCanBeCreated" << std::endl;
-}
+class Test {
+public:
+    Test(std::string_view name) : mName(name), mResult(true) {}
+    void operator() () {
+        std::cout << mName << std::endl;
+    }
+
+private:
+    std::string mName;
+    bool mResult;
+};
+
+Test test("testCanBeCreated");
 
 int main() {
-    testCanBeCreated();
+    test();
     return 0;
 }
