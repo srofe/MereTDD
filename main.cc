@@ -4,14 +4,16 @@
 class Test {
 public:
     Test(std::string_view name) : mName(name), mResult(true) {}
-    void operator() () {
-        std::cout << mName << std::endl;
-    }
+    void operator() ();
 
 private:
     std::string mName;
     bool mResult;
 };
+
+void Test::operator() () {
+        std::cout << mName << std::endl;
+}
 
 Test test("testCanBeCreated");
 
