@@ -3,4 +3,4 @@ project(MereTDD)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(MereTDD main.cc)
+add_executable(MereTDD tests/main.cc tests/Creation.cc)
