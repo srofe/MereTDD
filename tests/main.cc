@@ -2,6 +2,5 @@
 #include <iostream>
 
 int main() {
-    MereTDD::runTests();
-    return 0;
+    return MereTDD::runTests();
 }

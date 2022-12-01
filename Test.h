@@ -41,7 +41,11 @@ namespace MereTDD {
         return tests;
     }
 
-    inline void runTests() {
+    inline int runTests() {
+        std::cout << "Running " << getTests().size() << " tests.\n";
+        int numPassed = 0;
+        int numFailed = 0;
+
         for (auto *test: getTests()) {
             std::cout << "---------------\n" << test->name() << std::endl;
             try {
@@ -50,11 +54,22 @@ namespace MereTDD {
                 test->setFailed("Unexpected exception thrown.");
             }
             if (test->passed()) {
+                ++numPassed;
                 std::cout << "Passed" << std::endl;
             } else {
+                ++numFailed;
                 std::cout << "Failed\n" << test->reason() << std::endl;
             }
         }
+        std::cout << "---------------\n";
+        if (numFailed == 0) {
+            std::cout << "All tests passed." << std::endl;
+        } else {
+            std::cout << "Tests passed: " << numPassed << std::endl;
+            std::cout << "Tests failed: " << numFailed << std::endl;
+        }
+
+        return numFailed;
     }
 } // namespace MereTDD
 
