@@ -2,12 +2,10 @@
 #include <iostream>
 
 TEST {
-        std::cout << mName << std::endl;
+    std::cout << mName << std::endl;
 }
 
 int main() {
-    for (auto *test : MereTDD::getTests()) {
-        test->run();
-    }
+    MereTDD::runTests();
     return 0;
 }

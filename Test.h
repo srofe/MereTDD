@@ -16,6 +16,12 @@ namespace MereTDD {
 
         return tests;
     }
+
+    void runTests() {
+        for (auto *test: getTests()) {
+            test->run();
+        }
+    }
 } // namespace MereTDD
 
 #define TEST \
