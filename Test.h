@@ -10,6 +10,9 @@ namespace MereTDD {
     public:
         TestBase(std::string_view name) : mName(name), mPassed(true) {}
         virtual ~TestBase() = default;
+        virtual void runEx() {
+            run();
+        }
         virtual void run() = 0;
 
         std::string_view name() const {
@@ -49,7 +52,7 @@ namespace MereTDD {
         for (auto *test: getTests()) {
             output << "---------------\n" << test->name() << std::endl;
             try {
-                test->run();
+                test->runEx();
             } catch (...) {
                 test->setFailed("Unexpected exception thrown.");
             }
@@ -86,6 +89,23 @@ class MERETDD_CLASS : public MereTDD::TestBase { \
 public: \
     MERETDD_CLASS(std::string_view name) : TestBase(name) { \
         MereTDD::getTests().push_back(this); \
+    } \
+    void run() override; \
+}; \
+MERETDD_CLASS MERETDD_INSTANCE(testName); \
+void MERETDD_CLASS::run()
+
+#define TEST_EX(testName, exceptionType) \
+class MERETDD_CLASS : public MereTDD::TestBase { \
+public: \
+    MERETDD_CLASS(std::string_view name) : TestBase(name) { \
+        MereTDD::getTests().push_back(this);     \
+    } \
+    void runEx() override { \
+        try { \
+            run(); \
+        } catch (exceptionType const &) { \
+        } \
     } \
     void run() override; \
 }; \
