@@ -2,5 +2,5 @@
 #include <iostream>
 
 TEST {
-    std::cout << name() << std::endl;
+    throw 1;
 }

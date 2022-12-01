@@ -43,10 +43,16 @@ namespace MereTDD {
 
     inline void runTests() {
         for (auto *test: getTests()) {
+            std::cout << "---------------\n" << test->name() << std::endl;
             try {
                 test->run();
             } catch (...) {
                 test->setFailed("Unexpected exception thrown.");
+            }
+            if (test->passed()) {
+                std::cout << "Passed" << std::endl;
+            } else {
+                std::cout << "Failed\n" << test->reason() << std::endl;
             }
         }
     }
