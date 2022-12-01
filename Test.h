@@ -1,7 +1,7 @@
 #ifndef MERETDD_TEST_H
 #define MERETDD_TEST_H
 
-#include <iostream>
+#include <ostream>
 #include <string_view>
 #include <vector>
 
@@ -41,13 +41,13 @@ namespace MereTDD {
         return tests;
     }
 
-    inline int runTests() {
-        std::cout << "Running " << getTests().size() << " tests.\n";
+    inline int runTests(std::ostream& output) {
+        output << "Running " << getTests().size() << " tests.\n";
         int numPassed = 0;
         int numFailed = 0;
 
         for (auto *test: getTests()) {
-            std::cout << "---------------\n" << test->name() << std::endl;
+            output << "---------------\n" << test->name() << std::endl;
             try {
                 test->run();
             } catch (...) {
@@ -55,18 +55,18 @@ namespace MereTDD {
             }
             if (test->passed()) {
                 ++numPassed;
-                std::cout << "Passed" << std::endl;
+                output << "Passed" << std::endl;
             } else {
                 ++numFailed;
-                std::cout << "Failed\n" << test->reason() << std::endl;
+                output << "Failed\n" << test->reason() << std::endl;
             }
         }
-        std::cout << "---------------\n";
+        output << "---------------\n";
         if (numFailed == 0) {
-            std::cout << "All tests passed." << std::endl;
+            output << "All tests passed." << std::endl;
         } else {
-            std::cout << "Tests passed: " << numPassed << std::endl;
-            std::cout << "Tests failed: " << numFailed << std::endl;
+            output << "Tests passed: " << numPassed << std::endl;
+            output << "Tests failed: " << numFailed << std::endl;
         }
 
         return numFailed;
