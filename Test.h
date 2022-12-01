@@ -58,15 +58,23 @@ namespace MereTDD {
     }
 } // namespace MereTDD
 
-#define TEST \
-class Test : public MereTDD::TestBase { \
+#define MERETDD_CLASS_FINAL(line) Test ## line
+#define MERETDD_CLASS_RELAY(line) MERETDD_CLASS_FINAL(line)
+#define MERETDD_CLASS MERETDD_CLASS_RELAY(__LINE__)
+
+#define MERETDD_INSTANCE_FINAL(line) test ## line
+#define MERETDD_INSTANCE_RELAY(line) MERETDD_INSTANCE_FINAL(line)
+#define MERETDD_INSTANCE MERETDD_INSTANCE_RELAY(__LINE__)
+
+#define TEST(testName) \
+class MERETDD_CLASS : public MereTDD::TestBase { \
 public: \
-    Test(std::string_view name) : TestBase(name) { \
+    MERETDD_CLASS(std::string_view name) : TestBase(name) { \
         MereTDD::getTests().push_back(this); \
     } \
     void run() override; \
 }; \
-Test test("testCanBeCreated"); \
-void Test::run()
+MERETDD_CLASS MERETDD_INSTANCE(testName); \
+void MERETDD_CLASS::run()
 
 #endif // MERETDD_TEST_H
