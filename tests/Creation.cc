@@ -2,5 +2,5 @@
 #include <iostream>
 
 TEST {
-    std::cout << mName << std::endl;
+    std::cout << name() << std::endl;
 }
