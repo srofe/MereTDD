@@ -6,6 +6,17 @@
 #include <vector>
 
 namespace MereTDD {
+    class MissingException {
+    public:
+        MissingException(std::string_view exType) : mExType(exType) {}
+        std::string_view exType() const {
+            return mExType;
+        }
+
+    private:
+        std::string_view mExType;
+    };
+
     class TestBase {
     public:
         TestBase(std::string_view name) : mName(name), mPassed(true) {}
@@ -53,6 +64,11 @@ namespace MereTDD {
             output << "---------------\n" << test->name() << std::endl;
             try {
                 test->runEx();
+            } catch (MissingException const& ex) {
+                std::string message = "Expected exception type ";
+                message += ex.exType();
+                message += " was not thrown.";
+                test->setFailed(message);
             } catch (...) {
                 test->setFailed("Unexpected exception thrown.");
             }
@@ -104,8 +120,10 @@ public: \
     void runEx() override { \
         try { \
             run(); \
-        } catch (exceptionType const &) { \
+        } catch (exceptionType const &) {\
+            return; \
         } \
+        throw MereTDD::MissingException(#exceptionType); \
     } \
     void run() override; \
 }; \
