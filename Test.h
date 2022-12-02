@@ -122,6 +122,7 @@ namespace MereTDD {
 #define MERETDD_INSTANCE MERETDD_INSTANCE_RELAY(__LINE__)
 
 #define TEST(testName) \
+namespace { \
 class MERETDD_CLASS : public MereTDD::TestBase { \
 public: \
     MERETDD_CLASS(std::string_view name) : TestBase(name) { \
@@ -129,10 +130,12 @@ public: \
     } \
     void run() override; \
 }; \
+} /* end of namespace */ \
 MERETDD_CLASS MERETDD_INSTANCE(testName); \
 void MERETDD_CLASS::run()
 
 #define TEST_EX(testName, exceptionType) \
+namespace { \
 class MERETDD_CLASS : public MereTDD::TestBase { \
 public: \
     MERETDD_CLASS(std::string_view name) : TestBase(name) { \
@@ -148,6 +151,7 @@ public: \
     } \
     void run() override; \
 }; \
+} /* end of namespace */ \
 MERETDD_CLASS MERETDD_INSTANCE(testName); \
 void MERETDD_CLASS::run()
 
