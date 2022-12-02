@@ -67,6 +67,7 @@ namespace MereTDD {
     inline int runTests(std::ostream& output) {
         output << "Running " << getTests().size() << " tests.\n";
         int numPassed = 0;
+        int numMissedFailed = 0;
         int numFailed = 0;
 
         for (auto *test: getTests()) {
@@ -82,8 +83,15 @@ namespace MereTDD {
                 test->setFailed("Unexpected exception thrown.");
             }
             if (test->passed()) {
-                ++numPassed;
-                output << "Passed" << std::endl;
+                if (not test->expectedReason().empty()) {
+                    ++numMissedFailed;
+                    output << "Missed expected failure\n"
+                        << "Test passed but was expected to fail"
+                        << std::endl;
+                } else {
+                    ++numPassed;
+                    output << "Passed" << std::endl;
+                }
             } else if (not test->expectedReason().empty() && test->expectedReason() == test->reason()) {
                 ++numPassed;
                 output << "Expected failure\n" << test->reason() << std::endl;
@@ -93,12 +101,13 @@ namespace MereTDD {
             }
         }
         output << "---------------\n";
-        if (numFailed == 0) {
-            output << "All tests passed." << std::endl;
-        } else {
-            output << "Tests passed: " << numPassed << std::endl;
-            output << "Tests failed: " << numFailed << std::endl;
+        output << "Tests passed: " << numPassed << std::endl;
+        output << "Tests failed: " << numFailed;
+        if (numMissedFailed != 0) {
+            output << std::endl;
+            output << "Test failures missed: " << numMissedFailed;
         }
+        output << std::endl;
 
         return numFailed;
     }

@@ -10,6 +10,13 @@ TEST("Test that throws unexpectedly can be created") {
     throw "Unexpected";
 }
 
+// This test should throw an unexpected exception, but it doesn't. We need to
+// somehow let the use know what happened. This will result in a missed
+// failure.
+TEST("Test that should throw unexpectedly can be created") {
+    setExpectedFailureReason("Unexpected exception thrown.");
+}
+
 TEST_EX("Test with throw can be created", int) {
     throw 1;
 }
