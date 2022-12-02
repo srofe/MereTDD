@@ -38,15 +38,24 @@ namespace MereTDD {
             return mReason;
         }
 
+        std::string_view expectedReason() const {
+            return mExpectedReason;
+        }
+
         void setFailed(std::string_view reason) {
             mPassed = false;
             mReason = reason;
+        }
+
+        void setExpectedFailureReason(std::string_view reason) {
+            mExpectedReason = reason;
         }
 
     private:
         std::string mName;
         bool mPassed;
         std::string mReason;
+        std::string_view mExpectedReason;
     };
 
     inline std::vector<TestBase*>& getTests() {
@@ -75,6 +84,9 @@ namespace MereTDD {
             if (test->passed()) {
                 ++numPassed;
                 output << "Passed" << std::endl;
+            } else if (not test->expectedReason().empty() && test->expectedReason() == test->reason()) {
+                ++numPassed;
+                output << "Expected failure\n" << test->reason() << std::endl;
             } else {
                 ++numFailed;
                 output << "Failed\n" << test->reason() << std::endl;
