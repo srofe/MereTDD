@@ -39,6 +39,12 @@ namespace MereTDD {
         }
     };
 
+    inline void confirm(bool expected, bool actual, int line) {
+        if (actual != expected) {
+            throw BoolConfirmException(expected, line);
+        }
+    }
+
     class TestBase {
     public:
         TestBase(std::string_view name) : mName(name), mPassed(true) {}
@@ -179,14 +185,8 @@ public: \
 MERETDD_CLASS MERETDD_INSTANCE(testName); \
 void MERETDD_CLASS::run()
 
-#define CONFIRM_FALSE(actual) \
-if (actual) { \
-    throw MereTDD::BoolConfirmException(false, __LINE__); \
-}
+#define CONFIRM_FALSE(actual) MereTDD::confirm(false, actual, __LINE__)
 
-#define CONFIRM_TRUE(actual) \
-if (not actual) { \
-throw MereTDD::BoolConfirmException(false, __LINE__); \
-}
+#define CONFIRM_TRUE(actual) MereTDD::confirm(true, actual, __LINE__)
 
 #endif // MERETDD_TEST_H

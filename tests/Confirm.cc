@@ -7,7 +7,7 @@ bool isNegative(int value) {
 TEST("Test will pass without any confirms") {
 }
 
-TEST("Testing passing grades") {
+TEST("Test bool confirms") {
     bool result = isNegative(0);
     CONFIRM_FALSE(result);
 
