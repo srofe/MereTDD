@@ -1,6 +1,9 @@
 #include "../Test.h"
 
 bool isPassingGrade(int value) {
+    if (value < 60) {
+        return false;
+    }
     return true;
 }
 
