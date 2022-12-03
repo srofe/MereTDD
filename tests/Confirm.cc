@@ -1,19 +1,16 @@
 #include "../Test.h"
 
-bool isPassingGrade(int value) {
-    if (value < 60) {
-        return false;
-    }
-    return true;
+bool isNegative(int value) {
+    return value < 0;
 }
 
 TEST("Test will pass without any confirms") {
 }
 
 TEST("Testing passing grades") {
-    bool result = isPassingGrade(0);
+    bool result = isNegative(0);
     CONFIRM_FALSE(result);
 
-    result = isPassingGrade(100);
+    result = isNegative(-1);
     CONFIRM_TRUE(result);
 }
