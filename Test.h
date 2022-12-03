@@ -17,6 +17,28 @@ namespace MereTDD {
         std::string_view mExType;
     };
 
+    class ConfirmException {
+    public:
+        ConfirmException() = default;
+        virtual ~ConfirmException() = default;
+        std::string_view reason() const {
+            return mReason;
+        }
+
+    protected:
+        std::string mReason;
+    };
+
+    class BoolConfirmException : public ConfirmException {
+    public:
+        BoolConfirmException(bool expected, int line) {
+            mReason = "Confirm failed on line ";
+            mReason += std::to_string(line) + "\n";
+            mReason += "    Expected: ";
+            mReason += expected ? "true" : "false";
+        }
+    };
+
     class TestBase {
     public:
         TestBase(std::string_view name) : mName(name), mPassed(true) {}
@@ -74,6 +96,8 @@ namespace MereTDD {
             output << "---------------\n" << test->name() << std::endl;
             try {
                 test->runEx();
+            } catch (ConfirmException const& ex) {
+                test->setFailed(ex.reason());
             } catch (MissingException const& ex) {
                 std::string message = "Expected exception type ";
                 message += ex.exType();
@@ -122,6 +146,7 @@ namespace MereTDD {
 #define MERETDD_INSTANCE MERETDD_INSTANCE_RELAY(__LINE__)
 
 #define TEST(testName) \
+namespace { \
 class MERETDD_CLASS : public MereTDD::TestBase { \
 public: \
     MERETDD_CLASS(std::string_view name) : TestBase(name) { \
@@ -129,10 +154,12 @@ public: \
     } \
     void run() override; \
 }; \
+} /* end of namespace */ \
 MERETDD_CLASS MERETDD_INSTANCE(testName); \
 void MERETDD_CLASS::run()
 
 #define TEST_EX(testName, exceptionType) \
+namespace { \
 class MERETDD_CLASS : public MereTDD::TestBase { \
 public: \
     MERETDD_CLASS(std::string_view name) : TestBase(name) { \
@@ -148,7 +175,18 @@ public: \
     } \
     void run() override; \
 }; \
+} /* end of namespace */ \
 MERETDD_CLASS MERETDD_INSTANCE(testName); \
 void MERETDD_CLASS::run()
+
+#define CONFIRM_FALSE(actual) \
+if (actual) { \
+    throw MereTDD::BoolConfirmException(false, __LINE__); \
+}
+
+#define CONFIRM_TRUE(actual) \
+if (not actual) { \
+throw MereTDD::BoolConfirmException(false, __LINE__); \
+}
 
 #endif // MERETDD_TEST_H
