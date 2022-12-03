@@ -179,4 +179,14 @@ public: \
 MERETDD_CLASS MERETDD_INSTANCE(testName); \
 void MERETDD_CLASS::run()
 
+#define CONFIRM_FALSE(actual) \
+if (actual) { \
+    throw MereTDD::BoolConfirmException(false, __LINE__); \
+}
+
+#define CONFIRM_TRUE(actual) \
+if (not actual) { \
+throw MereTDD::BoolConfirmException(false, __LINE__); \
+}
+
 #endif // MERETDD_TEST_H
