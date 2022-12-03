@@ -27,3 +27,13 @@ TEST("Test int confirms") {
     result = multiplyBy2(-1);
     CONFIRM(-2, result);
 }
+
+TEST("Test bool confirm failure") {
+    bool result = isNegative(0);
+    CONFIRM_TRUE(result);
+}
+
+TEST("Test int confirm failure") {
+    int result = multiplyBy2(1);
+    CONFIRM(0, result);
+}
