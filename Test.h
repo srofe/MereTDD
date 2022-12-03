@@ -39,9 +39,32 @@ namespace MereTDD {
         }
     };
 
+    class  ActualConfirmException : public ConfirmException {
+    public:
+        ActualConfirmException(int expected, int actual, int line) : mExpected(std::to_string(expected)), mActual(std::to_string(actual)), mLine(line) {
+            formatReason();
+        }
+        private:
+            void formatReason() {
+                mReason = "Confirm failed on line ";
+                mReason += std::to_string(mLine) + "\n";
+                mReason += "    Expected: " + mExpected + "\n";
+                mReason += "    Actual  : " + mActual;
+            }
+            std::string mExpected;
+            std::string mActual;
+            int mLine;
+    };
+
     inline void confirm(bool expected, bool actual, int line) {
         if (actual != expected) {
             throw BoolConfirmException(expected, line);
+        }
+    }
+
+    inline void confirm(int expected, int actual, int line) {
+        if (actual != expected) {
+            throw ActualConfirmException(expected, actual, line);
         }
     }
 
@@ -188,5 +211,7 @@ void MERETDD_CLASS::run()
 #define CONFIRM_FALSE(actual) MereTDD::confirm(false, actual, __LINE__)
 
 #define CONFIRM_TRUE(actual) MereTDD::confirm(true, actual, __LINE__)
+
+#define CONFIRM(expected, actual) MereTDD::confirm(expected, actual, __LINE__)
 
 #endif // MERETDD_TEST_H
