@@ -112,7 +112,7 @@ namespace MereTDD {
         std::string mName;
         bool mPassed;
         std::string mReason;
-        std::string_view mExpectedReason;
+        std::string mExpectedReason;
         int mConfirmLocation;
     };
 
