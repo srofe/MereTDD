@@ -8,6 +8,10 @@ int multiplyBy2(int value) {
     return value * 2;
 }
 
+long multiplyBy2(long value) {
+    return value * 2L;
+}
+
 TEST("Test will pass without any confirms") {
 }
 
@@ -26,6 +30,15 @@ TEST("Test int confirms") {
     CONFIRM(2, result);
     result = multiplyBy2(-1);
     CONFIRM(-2, result);
+}
+
+TEST("Test long confirms") {
+    long result = multiplyBy2(0L);
+    CONFIRM(0L, result);
+    result = multiplyBy2(1L);
+    CONFIRM(2L, result);
+    result = multiplyBy2(-1);
+    CONFIRM(-2L, result);
 }
 
 TEST("Test bool confirm failure") {
