@@ -55,3 +55,11 @@ TEST("Test int confirm failure") {
     int result = multiplyBy2(1);
     CONFIRM(0, result);
 }
+
+TEST("Test long confirm failure") {
+    std::string reason = "    Expected: 0\n";
+    reason += "    Actual  : 2";
+    setExpectedFailureReason(reason);
+    long result = multiplyBy2(1L);
+    CONFIRM(0L, result);
+}
