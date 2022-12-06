@@ -90,3 +90,12 @@ TEST("Test long long confirm failure") {
     long long result = multiplyBy2(10'000'000'000LL);
     CONFIRM(10'000'000'000LL, result);
 }
+
+TEST("Test string confirm failure") {
+    std::string reason = "    Expected: def\n";
+    reason += "    Actual  : abc";
+    setExpectedFailureReason(reason);
+    std::string result = "abc";
+    std::string expected = "def";
+    CONFIRM(expected, result);
+}
