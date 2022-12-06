@@ -54,6 +54,12 @@ TEST("Test long long confirms") {
     CONFIRM(-20'000'000'000, result);
 }
 
+TEST("Test string confirms") {
+    std::string result = "abc";
+    std::string expected = "abc";
+    CONFIRM(expected, result);
+}
+
 TEST("Test bool confirm failure") {
     std::string reason = "    Expected: true";
     setExpectedFailureReason(reason);

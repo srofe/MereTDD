@@ -70,6 +70,16 @@ namespace MereTDD {
         }
     }
 
+    inline void confirm(std::string_view expected, std::string_view actual, int line) {
+        if (actual != expected) {
+            throw ActualConfirmException(expected, actual, line);
+        }
+    }
+
+    inline void confirm(std::string const & expected, std::string const & actual, int line) {
+        confirm(std::string_view(expected), std::string_view(actual), line);
+    }
+
     class TestBase {
     public:
         TestBase(std::string_view name) : mName(name), mPassed(true), mConfirmLocation(-1) {}
