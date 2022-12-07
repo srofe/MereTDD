@@ -1,6 +1,7 @@
 #ifndef MERETDD_TEST_H
 #define MERETDD_TEST_H
 
+#include <map>
 #include <ostream>
 #include <string_view>
 #include <vector>
@@ -96,6 +97,35 @@ namespace MereTDD {
         if (actual < (expected - 0.000001) || actual > (expected + 0.000001)) {
             throw ActualConfirmException(std::to_string(expected), std::to_string(actual), line);
         }
+    }
+
+    class Test;
+    class TestSuite;
+
+    inline std::map<std::string, std::vector<Test *>>& getTests() {
+        static std::map<std::string, std::vector<Test *>> tests;
+        return tests;
+    }
+
+    inline std::map<std::string, std::vector<TestSuite *>>& getTestSuites() {
+        static std::map<std::string, std::vector<TestSuite *>> suites;
+        return suites;
+    }
+
+    inline void addTest(std::string_view suiteName, Test* test) {
+        std::string name(suiteName);
+        if (not getTests().contains(name)) {
+            getTests().try_emplace(name, std::vector<Test *>());
+        }
+        getTests()[name].push_back(test);
+    }
+
+    inline void addTestSuite(std::string_view suiteName, TestSuite* suite) {
+        std::string name(suiteName);
+        if (not getTestSuites().contains(name)) {
+            getTestSuites().try_emplace(name, std::vector<TestSuite*>());
+        }
+        getTestSuites()[name].push_back(suite);
     }
 
     class TestBase {
