@@ -18,8 +18,25 @@ void deleteTestEntry(int /* id */) {
     // Real code would use the id to delete the temporary row of data.
 }
 
+class TempEntry {
+public:
+    TempEntry() {
+        mId = createTestEntry();
+    }
+
+    ~TempEntry() {
+        deleteTestEntry(mId);
+    }
+
+    int id() {
+        return mId;
+    }
+
+private:
+    int mId;
+};
+
 TEST_EX("Test will run setup and teardown code", int) {
-    int id = createTestEntry();
-    updateTestEntry(id, "");
-    deleteTestEntry(id);
+    TempEntry entry;
+    updateTestEntry(entry.id(), "");
 }
