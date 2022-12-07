@@ -80,6 +80,24 @@ namespace MereTDD {
         confirm(std::string_view(expected), std::string_view(actual), line);
     }
 
+    inline void confirm(float expected, float actual, int line) {
+        if (actual < (expected - 0.0001f) || actual > (expected + 0.0001f)) {
+            throw ActualConfirmException(std::to_string(expected), std::to_string(actual), line);
+        }
+    }
+
+    inline void confirm(double expected, double actual, int line) {
+        if (actual < (expected - 0.000001) || actual > (expected + 0.000001)) {
+            throw ActualConfirmException(std::to_string(expected), std::to_string(actual), line);
+        }
+    }
+
+    inline void confirm(long double expected, long double actual, int line) {
+        if (actual < (expected - 0.000001) || actual > (expected + 0.000001)) {
+            throw ActualConfirmException(std::to_string(expected), std::to_string(actual), line);
+        }
+    }
+
     class TestBase {
     public:
         TestBase(std::string_view name) : mName(name), mPassed(true), mConfirmLocation(-1) {}

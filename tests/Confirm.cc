@@ -49,15 +49,39 @@ TEST("Test long long confirms") {
     long long result = multiplyBy2(0LL);
     CONFIRM(0LL, result);
     result = multiplyBy2(10'000'000'000LL);
-    CONFIRM(20'000'000'000, result);
+    CONFIRM(20'000'000'000LL, result);
     result = multiplyBy2(-10'000'000'000LL);
-    CONFIRM(-20'000'000'000, result);
+    CONFIRM(-20'000'000'000LL, result);
 }
 
 TEST("Test string confirms") {
     std::string result = "abc";
     std::string expected = "abc";
     CONFIRM(expected, result);
+}
+
+TEST("Test float confirms") {
+    float f1 = 0.1f;
+    float f2 = 0.2f;
+    float sum = f1 + f2;
+    float expected = 0.3f;
+    CONFIRM(expected, sum);
+}
+
+TEST("Test double confirms") {
+    double d1 = 0.1;
+    double d2 = 0.2;
+    double sum = d1 + d2;
+    double expected = 0.3;
+    CONFIRM(expected, sum);
+}
+
+TEST("Test long double confirms") {
+    long double ld1 = 0.1;
+    long double ld2 = 0.2;
+    long double sum = ld1 + ld2;
+    long double expected = 0.3;
+    CONFIRM(expected, sum);
 }
 
 TEST("Test bool confirm failure") {
