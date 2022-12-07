@@ -130,32 +130,19 @@ namespace MereTDD {
 
     class TestBase {
     public:
-        TestBase(std::string_view name) : mName(name), mPassed(true), mConfirmLocation(-1) {}
+        TestBase(std::string_view name, std::string_view suiteName) :
+            mName(name),
+            mSuiteName(suiteName),
+            mPassed(true),
+            mConfirmLocation(-1) {}
         virtual ~TestBase() = default;
-        virtual void runEx() {
-            run();
-        }
-        virtual void run() = 0;
 
-        std::string_view name() const {
-            return mName;
-        }
-
-        bool passed() const {
-            return mPassed;
-        }
-
-        std::string_view reason() const {
-            return mReason;
-        }
-
-        std::string_view expectedReason() const {
-            return mExpectedReason;
-        }
-
-        int confirmLocatoin() const {
-            return mConfirmLocation;
-        }
+        std::string_view name() const { return mName; }
+        std::string_view suiteName() const { return mSuiteName; }
+        bool passed() const { return mPassed; }
+        std::string_view reason() const { return mReason; }
+        std::string_view expectedReason() const { return mExpectedReason; }
+        int confirmLocatoin() const { return mConfirmLocation; }
 
         void setFailed(std::string_view reason, int confirmLocation = -1) {
             mPassed = false;
@@ -163,23 +150,13 @@ namespace MereTDD {
             mConfirmLocation = confirmLocation;
         }
 
-        void setExpectedFailureReason(std::string_view reason) {
-            mExpectedReason = reason;
-        }
-
     private:
         std::string mName;
+        std::string mSuiteName;
         bool mPassed;
         std::string mReason;
-        std::string mExpectedReason;
         int mConfirmLocation;
     };
-
-    inline std::vector<TestBase*>& getTests() {
-        static std::vector<TestBase*> tests;
-
-        return tests;
-    }
 
     inline int runTests(std::ostream& output) {
         output << "Running " << getTests().size() << " tests.\n";
