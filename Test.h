@@ -141,8 +141,7 @@ namespace MereTDD {
         std::string_view suiteName() const { return mSuiteName; }
         bool passed() const { return mPassed; }
         std::string_view reason() const { return mReason; }
-        std::string_view expectedReason() const { return mExpectedReason; }
-        int confirmLocatoin() const { return mConfirmLocation; }
+        int confirmLocation() const { return mConfirmLocation; }
 
         void setFailed(std::string_view reason, int confirmLocation = -1) {
             mPassed = false;
@@ -156,6 +155,28 @@ namespace MereTDD {
         bool mPassed;
         std::string mReason;
         int mConfirmLocation;
+    };
+
+    class Test : TestBase {
+    public:
+        Test(std::string_view name, std::string_view suiteName) : TestBase(name, suiteName) {
+            addTest(suiteName, this);
+        }
+
+        virtual void runEx() {
+            run();
+        }
+
+        virtual void run() = 0;
+
+        std::string_view expectedReason() const { return mExpectedReason; }
+
+        void setExpectedFailureReason(std::string_view reason) {
+            mExpectedReason = reason;
+        }
+
+    private:
+        std::string mExpectedReason;
     };
 
     inline int runTests(std::ostream& output) {
@@ -193,8 +214,8 @@ namespace MereTDD {
                 output << "Expected failure\n" << test->reason() << std::endl;
             } else {
                 ++numFailed;
-                if (test->confirmLocatoin() != -1) {
-                    output << "Failed confirm on line " << test->confirmLocatoin() << "\n";
+                if (test->confirmLocation() != -1) {
+                    output << "Failed confirm on line " << test->confirmLocation() << "\n";
                 } else {
                     output << "Failed\n";
                 }
