@@ -7,17 +7,6 @@
 #include <vector>
 
 namespace MereTDD {
-    class MissingException {
-    public:
-        MissingException(std::string_view exType) : mExType(exType) {}
-        std::string_view exType() const {
-            return mExType;
-        }
-
-    private:
-        std::string_view mExType;
-    };
-
     class ConfirmException {
     public:
         ConfirmException(int line) : mLine(line) {}
@@ -25,13 +14,11 @@ namespace MereTDD {
         std::string_view reason() const {
             return mReason;
         }
-        int line() const {
-            return mLine;
-        }
+        int line() const { return mLine; }
 
     protected:
-        int mLine;
         std::string mReason;
+        int mLine;
     };
 
     class BoolConfirmException : public ConfirmException {
@@ -58,16 +45,19 @@ namespace MereTDD {
             std::string mActual;
     };
 
+    class MissingException {
+    public:
+        MissingException(std::string_view exType) : mExType(exType) {}
+
+        std::string_view exType() const { return mExType; }
+
+    private:
+        std::string mExType;
+    };
+
     inline void confirm(bool expected, bool actual, int line) {
         if (actual != expected) {
             throw BoolConfirmException(expected, line);
-        }
-    }
-
-    template <typename T>
-    inline void confirm(T const & expected, T const & actual, int line) {
-        if (actual != expected) {
-            throw ActualConfirmException(std::to_string(expected), std::to_string(actual), line);
         }
     }
 
@@ -95,6 +85,13 @@ namespace MereTDD {
 
     inline void confirm(long double expected, long double actual, int line) {
         if (actual < (expected - 0.000001) || actual > (expected + 0.000001)) {
+            throw ActualConfirmException(std::to_string(expected), std::to_string(actual), line);
+        }
+    }
+
+    template <typename T>
+    void confirm(T const & expected, T const & actual, int line) {
+        if (actual != expected) {
             throw ActualConfirmException(std::to_string(expected), std::to_string(actual), line);
         }
     }
@@ -157,7 +154,7 @@ namespace MereTDD {
         int mConfirmLocation;
     };
 
-    class Test : TestBase {
+    class Test : public TestBase {
     public:
         Test(std::string_view name, std::string_view suiteName) : TestBase(name, suiteName) {
             addTest(suiteName, this);
@@ -182,7 +179,7 @@ namespace MereTDD {
     template <typename ExceptionT>
     class TestEx : public Test {
     public:
-        TestEx(std::string_view name, std::string_view suiteName, std::string suiteName, std::string_view exceptionName) : Test(name, suiteName), mExceptionName(exceptionName) {}
+        TestEx(std::string_view name, std::string_view suiteName, std::string_view exceptionName) : Test(name, suiteName), mExceptionName(exceptionName) {}
 
         void runEx() override {
             try {
@@ -194,7 +191,17 @@ namespace MereTDD {
         }
 
     private:
-        std::string mExceptionName
+        std::string mExceptionName;
+    };
+
+    class TestSuite : public TestBase {
+    public:
+        TestSuite(std::string_view name, std::string_view suiteName) : TestBase(name, suiteName) {
+            addTestSuite(suiteName, this);
+        }
+
+        virtual void suiteSetup() = 0;
+        virtual void suiteTeardown() = 0;
     };
 
     inline int runTests(std::ostream& output) {
