@@ -179,6 +179,24 @@ namespace MereTDD {
         std::string mExpectedReason;
     };
 
+    template <typename ExceptionT>
+    class TestEx : public Test {
+    public:
+        TestEx(std::string_view name, std::string_view suiteName, std::string suiteName, std::string_view exceptionName) : Test(name, suiteName), mExceptionName(exceptionName) {}
+
+        void runEx() override {
+            try {
+                run();
+            } catch (ExceptionT const &) {
+                return;
+            }
+            throw MissingException(mExceptionName);
+        }
+
+    private:
+        std::string mExceptionName
+    };
+
     inline int runTests(std::ostream& output) {
         output << "Running " << getTests().size() << " tests.\n";
         int numPassed = 0;
