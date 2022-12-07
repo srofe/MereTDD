@@ -205,7 +205,18 @@ namespace MereTDD {
 
         return numFailed;
     }
-} // namespace MereTDD
+
+    template <typename T>
+    class SetupAndTeardown : public T {
+    public:
+        SetupAndTeardown() {
+            T::setup();
+        }
+        ~SetupAndTeardown() {
+            T::teardown();
+        }
+    };
+}; // namespace MereTDD
 
 #define MERETDD_CLASS_FINAL(line) Test ## line
 #define MERETDD_CLASS_RELAY(line) MERETDD_CLASS_FINAL(line)

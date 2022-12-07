@@ -20,11 +20,11 @@ void deleteTestEntry(int /* id */) {
 
 class TempEntry {
 public:
-    TempEntry() {
+    void setup() {
         mId = createTestEntry();
     }
 
-    ~TempEntry() {
+    void teardown() {
         deleteTestEntry(mId);
     }
 
@@ -37,6 +37,6 @@ private:
 };
 
 TEST_EX("Test will run setup and teardown code", int) {
-    TempEntry entry;
+    MereTDD::SetupAndTeardown<TempEntry> entry;
     updateTestEntry(entry.id(), "");
 }
