@@ -60,6 +60,11 @@ TEST("Test string confirms") {
     CONFIRM(expected, result);
 }
 
+TEST("Test string and string literal confirms") {
+    std::string result = "abc";
+    CONFIRM("abc", result);
+}
+
 TEST("Test float confirms") {
     float f1 = 0.1f;
     float f2 = 0.2f;
