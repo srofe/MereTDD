@@ -243,7 +243,7 @@ namespace MereTDD {
     }
 
     inline bool runSuite(std::ostream& output, bool setup, std::string const& name, int& numPassed, int& numFailed) {
-        for (auto & suite: getTestSuites()[name]) {
+        for (auto &suite: getTestSuites()[name]) {
             if (setup) {
                 output << "------- Setup:";
             } else {
@@ -257,7 +257,7 @@ namespace MereTDD {
                 } else {
                     suite->suiteTeardown();
                 }
-            } catch (ConfirmException const& exception) {
+            } catch (ConfirmException const &exception) {
                 suite->setFailed(exception.reason(), exception.line());
             } catch (...) {
                 suite->setFailed("Unexpected exception thrown.")
@@ -278,59 +278,47 @@ namespace MereTDD {
             }
         }
         return true;
+    }
 
-    inline int runTests(std::ostream& output) {
+    inline int runTests(std::ostream &output) {
         output << "Running " << getTests().size() << " tests.\n";
         int numPassed = 0;
         int numMissedFailed = 0;
         int numFailed = 0;
 
-        for (auto *test: getTests()) {
-            output << "---------------\n" << test->name() << std::endl;
-            try {
-                test->runEx();
-            } catch (ConfirmException const& ex) {
-                test->setFailed(ex.reason(), ex.line());
-            } catch (MissingException const& ex) {
-                std::string message = "Expected exception type ";
-                message += ex.exType();
-                message += " was not thrown.";
-                test->setFailed(message);
-            } catch (...) {
-                test->setFailed("Unexpected exception thrown.");
-            }
-            if (test->passed()) {
-                if (not test->expectedReason().empty()) {
-                    ++numMissedFailed;
-                    output << "Missed expected failure\n"
-                        << "Test passed but was expected to fail"
-                        << std::endl;
-                } else {
-                    ++numPassed;
-                    output << "Passed" << std::endl;
-                }
-            } else if (not test->expectedReason().empty() && test->expectedReason() == test->reason()) {
-                ++numPassed;
-                output << "Expected failure\n" << test->reason() << std::endl;
+        for (auto const &[key, value]: getTests()) {
+            std::string suiteDisplayName = "Suite: ";
+            if (key.empty()) {
+                suiteDisplayName += "Single Tests";
             } else {
-                ++numFailed;
-                if (test->confirmLocation() != -1) {
-                    output << "Failed confirm on line " << test->confirmLocation() << "\n";
-                } else {
-                    output << "Failed\n";
+                suiteDisplayName += key;
+            }
+            output << "--------------- " << suiteDisplayName << std::endl;
+            if (not key.empty()) {
+                if (not getTestSuites().contains(key)) {
+                    output << "Test suite is not found." << " Exiting test application." << std::endl;
+                    return ++numFailed;
                 }
-                output << test->reason() << std::endl;
+                if (not runSuite(output, true, key, numPassed, numFailed)) {
+                    output << "Test suite setup failed." << " Skipping test in suite." << std::endl;
+                    continue;
+                }
+            }
+            for (auto *test: value) {
+                runTest(output, test, numPassed, numFailed, numMissedFailed);
+            }
+            if (not key.empty()) {
+                if (not runSuite(output, false, key, numPassed, numFailed)) {
+                    output << "Test suite teardown failed." << std::endl;
+                }
             }
         }
-        output << "---------------\n";
-        output << "Tests passed: " << numPassed << std::endl;
-        output << "Tests failed: " << numFailed;
+        output << "-----------------------------------\\n";
+        output << "Tests passed: " << numPassed << "\nTests failed: " << numFailed;
         if (numMissedFailed != 0) {
-            output << std::endl;
-            output << "Test failures missed: " << numMissedFailed;
+            output << "\nTest failures missed: " << numMissedFailed;
         }
         output << std::endl;
-
         return numFailed;
     }
 
