@@ -216,7 +216,7 @@ namespace MereTDD {
             message += " was not thrown.";
             test->setFailed(message);
         } catch (...) {
-            test->setFailed("Unexpected exception thrown.")
+            test->setFailed("Unexpected exception thrown.");
         }
 
         if (test->passed()) {
@@ -260,7 +260,7 @@ namespace MereTDD {
             } catch (ConfirmException const &exception) {
                 suite->setFailed(exception.reason(), exception.line());
             } catch (...) {
-                suite->setFailed("Unexpected exception thrown.")
+                suite->setFailed("Unexpected exception thrown.");
             }
 
             if (suite->passed()) {
@@ -313,7 +313,7 @@ namespace MereTDD {
                 }
             }
         }
-        output << "-----------------------------------\\n";
+        output << "----------------------------------- \n";
         output << "Tests passed: " << numPassed << "\nTests failed: " << numFailed;
         if (numMissedFailed != 0) {
             output << "\nTest failures missed: " << numMissedFailed;
@@ -332,7 +332,21 @@ namespace MereTDD {
             T::teardown();
         }
     };
-}; // namespace MereTDD
+
+    template <typename T>
+    class TestSuiteSetupAndTeardown : public T, public TestSuite {
+    public:
+        TestSuiteSetupAndTeardown(std::string_view name, std::string_view suite) : TestSuite(name, suite) {}
+
+        void suiteSetup() override {
+            T::setup();
+        }
+
+        void suiteTeardown() override {
+            T::teardown();
+        }
+    };
+} // namespace MereTDD
 
 #define MERETDD_CLASS_FINAL(line) Test ## line
 #define MERETDD_CLASS_RELAY(line) MERETDD_CLASS_FINAL(line)
@@ -342,13 +356,33 @@ namespace MereTDD {
 #define MERETDD_INSTANCE_RELAY(line) MERETDD_INSTANCE_FINAL(line)
 #define MERETDD_INSTANCE MERETDD_INSTANCE_RELAY(__LINE__)
 
+#define TEST_SUITE(testName, suiteName) \
+namespace { \
+class MERETDD_CLASS : public MereTDD::Test { \
+public: \
+    MERETDD_CLASS(std::string_view name, std::string_view suite) : Test(name, suite) {} \
+    void run() override; \
+}; \
+} /* end of namespace */ \
+MERETDD_CLASS MERETDD_INSTANCE(testName, suiteName); \
+void MERETDD_CLASS::run()
+
+#define TEST_SUITE_EX(testName, suiteName, exceptionType) \
+namespace { \
+class MERETDD_CLASS : public MereTDD::TestEx<exceptionType> { \
+public: \
+    MERETDD_CLASS(std::string_view name, std::string_view suite, std::string_view exceptionName) : TestEx(name, suite, exceptionName) {} \
+    void run() override; \
+}; \
+} /* end of namespace */ \
+MERETDD_CLASS MERETDD_INSTANCE(testName, suiteName, #exceptionType); \
+void MERETDD_CLASS::run()
+
 #define TEST(testName) \
 namespace { \
-class MERETDD_CLASS : public MereTDD::TestBase { \
+class MERETDD_CLASS : public MereTDD::Test { \
 public: \
-    MERETDD_CLASS(std::string_view name) : TestBase(name) { \
-        MereTDD::getTests().push_back(this); \
-    } \
+    MERETDD_CLASS(std::string_view name) : Test(name, "") {} \
     void run() override; \
 }; \
 } /* end of namespace */ \
@@ -357,23 +391,13 @@ void MERETDD_CLASS::run()
 
 #define TEST_EX(testName, exceptionType) \
 namespace { \
-class MERETDD_CLASS : public MereTDD::TestBase { \
+class MERETDD_CLASS : public MereTDD::TestEx<exceptionType> { \
 public: \
-    MERETDD_CLASS(std::string_view name) : TestBase(name) { \
-        MereTDD::getTests().push_back(this);     \
-    } \
-    void runEx() override { \
-        try { \
-            run(); \
-        } catch (exceptionType const &) {\
-            return; \
-        } \
-        throw MereTDD::MissingException(#exceptionType); \
-    } \
+MERETDD_CLASS(std::string_view name, std::string_view exceptionName) : TestEx(name, "", exceptionName) {} \
     void run() override; \
 }; \
 } /* end of namespace */ \
-MERETDD_CLASS MERETDD_INSTANCE(testName); \
+MERETDD_CLASS MERETDD_INSTANCE(testName, #exceptionType); \
 void MERETDD_CLASS::run()
 
 #define CONFIRM_FALSE(actual) MereTDD::confirm(false, actual, __LINE__)
