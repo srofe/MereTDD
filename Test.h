@@ -7,24 +7,9 @@
 #include <vector>
 #include "ConfirmException.h"
 #include "BoolConfirmException.h"
+#include "ActualConfirmException.h"
 
 namespace MereTDD {
-    class  ActualConfirmException : public ConfirmException {
-    public:
-        ActualConfirmException(std::string_view expected, std::string_view actual, int line) : ConfirmException(line),
-        mExpected(expected),
-        mActual(actual) {
-            formatReason();
-        }
-        private:
-            void formatReason() {
-                mReason += "    Expected: " + mExpected + "\n";
-                mReason += "    Actual  : " + mActual;
-            }
-            std::string mExpected;
-            std::string mActual;
-    };
-
     class MissingException {
     public:
         MissingException(std::string_view exType) : mExType(exType) {}
