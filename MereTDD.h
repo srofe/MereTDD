@@ -13,6 +13,7 @@
 #include "Test.h"
 #include "TestEx.h"
 #include "TestSuite.h"
+#include "SetupAndTeardown.h"
 #include "confirm.h"
 
 namespace MereTDD {
@@ -133,17 +134,6 @@ namespace MereTDD {
         output << std::endl;
         return numFailed;
     }
-
-    template <typename T>
-    class SetupAndTeardown : public T {
-    public:
-        SetupAndTeardown() {
-            T::setup();
-        }
-        ~SetupAndTeardown() {
-            T::teardown();
-        }
-    };
 
     template <typename T>
     class TestSuiteSetupAndTeardown : public T, public TestSuite {
