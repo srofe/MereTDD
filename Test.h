@@ -6,16 +6,9 @@
 #include <string_view>
 #include <vector>
 #include "ConfirmException.h"
+#include "BoolConfirmException.h"
 
 namespace MereTDD {
-    class BoolConfirmException : public ConfirmException {
-    public:
-        BoolConfirmException(bool expected, int line) : ConfirmException(line) {
-            mReason += "    Expected: ";
-            mReason += expected ? "true" : "false";
-        }
-    };
-
     class  ActualConfirmException : public ConfirmException {
     public:
         ActualConfirmException(std::string_view expected, std::string_view actual, int line) : ConfirmException(line),
