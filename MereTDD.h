@@ -10,28 +10,16 @@
 #include "ActualConfirmException.h"
 #include "MissingException.h"
 #include "TestBase.h"
+#include "Test.h"
 #include "confirm.h"
 
 namespace MereTDD {
     class Test;
     class TestSuite;
 
-    inline std::map<std::string, std::vector<Test *>>& getTests() {
-        static std::map<std::string, std::vector<Test *>> tests;
-        return tests;
-    }
-
     inline std::map<std::string, std::vector<TestSuite *>>& getTestSuites() {
         static std::map<std::string, std::vector<TestSuite *>> suites;
         return suites;
-    }
-
-    inline void addTest(std::string_view suiteName, Test* test) {
-        std::string name(suiteName);
-        if (not getTests().contains(name)) {
-            getTests().try_emplace(name, std::vector<Test *>());
-        }
-        getTests()[name].push_back(test);
     }
 
     inline void addTestSuite(std::string_view suiteName, TestSuite* suite) {
@@ -41,28 +29,6 @@ namespace MereTDD {
         }
         getTestSuites()[name].push_back(suite);
     }
-
-    class Test : public TestBase {
-    public:
-        Test(std::string_view name, std::string_view suiteName) : TestBase(name, suiteName) {
-            addTest(suiteName, this);
-        }
-
-        virtual void runEx() {
-            run();
-        }
-
-        virtual void run() = 0;
-
-        std::string_view expectedReason() const { return mExpectedReason; }
-
-        void setExpectedFailureReason(std::string_view reason) {
-            mExpectedReason = reason;
-        }
-
-    private:
-        std::string mExpectedReason;
-    };
 
     template <typename ExceptionT>
     class TestEx : public Test {
