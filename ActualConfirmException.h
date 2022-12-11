@@ -22,4 +22,5 @@ namespace MereTDD {
         std::string mActual;
     };
 }
+
 #endif //MERETDD_ACTUALCONFIRMEXCEPTION_H

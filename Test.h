@@ -8,18 +8,9 @@
 #include "ConfirmException.h"
 #include "BoolConfirmException.h"
 #include "ActualConfirmException.h"
+#include "MissingException.h"
 
 namespace MereTDD {
-    class MissingException {
-    public:
-        MissingException(std::string_view exType) : mExType(exType) {}
-
-        std::string_view exType() const { return mExType; }
-
-    private:
-        std::string mExType;
-    };
-
     inline void confirm(bool expected, bool actual, int line) {
         if (actual != expected) {
             throw BoolConfirmException(expected, line);
