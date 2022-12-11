@@ -1,5 +1,5 @@
-#ifndef MERETDD_TEST_H
-#define MERETDD_TEST_H
+#ifndef MERETDD_MERETDD_H
+#define MERETDD_MERETDD_H
 
 #include <map>
 #include <ostream>
@@ -294,4 +294,4 @@ void MERETDD_CLASS::run()
 
 #define CONFIRM(expected, actual) MereTDD::confirm(expected, actual, __LINE__)
 
-#endif // MERETDD_TEST_H
+#endif // MERETDD_MERETDD_H

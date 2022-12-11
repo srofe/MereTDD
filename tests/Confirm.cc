@@ -1,4 +1,4 @@
-#include "../Test.h"
+#include "../MereTDD.h"
 
 bool isNegative(int value) {
     return value < 0;

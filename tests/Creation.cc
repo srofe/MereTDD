@@ -1,4 +1,4 @@
-#include "../Test.h"
+#include "../MereTDD.h"
 
 TEST("Test can be created") {
 }
