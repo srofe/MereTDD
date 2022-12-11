@@ -11,28 +11,11 @@
 #include "MissingException.h"
 #include "TestBase.h"
 #include "Test.h"
+#include "TestEx.h"
 #include "TestSuite.h"
 #include "confirm.h"
 
 namespace MereTDD {
-    template <typename ExceptionT>
-    class TestEx : public Test {
-    public:
-        TestEx(std::string_view name, std::string_view suiteName, std::string_view exceptionName) : Test(name, suiteName), mExceptionName(exceptionName) {}
-
-        void runEx() override {
-            try {
-                run();
-            } catch (ExceptionT const &) {
-                return;
-            }
-            throw MissingException(mExceptionName);
-        }
-
-    private:
-        std::string mExceptionName;
-    };
-
     inline void runTest(std::ostream& output, Test* test, int& numPassed, int& numFailed, int& numMissedFailed) {
         output << "------- Test: " << test->name() << std::endl;
         try {

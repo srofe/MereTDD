@@ -1,8 +1,6 @@
 #ifndef MERETDD_TESTSUITE_H
 #define MERETDD_TESTSUITE_H
 
-
-
 namespace MereTDD {
     class TestSuite;
 
