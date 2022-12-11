@@ -14,6 +14,7 @@
 #include "TestEx.h"
 #include "TestSuite.h"
 #include "SetupAndTeardown.h"
+#include "TestSuiteSetupAndTeardown.h"
 #include "confirm.h"
 
 namespace MereTDD {
@@ -134,20 +135,6 @@ namespace MereTDD {
         output << std::endl;
         return numFailed;
     }
-
-    template <typename T>
-    class TestSuiteSetupAndTeardown : public T, public TestSuite {
-    public:
-        TestSuiteSetupAndTeardown(std::string_view name, std::string_view suite) : TestSuite(name, suite) {}
-
-        void suiteSetup() override {
-            T::setup();
-        }
-
-        void suiteTeardown() override {
-            T::teardown();
-        }
-    };
 } // namespace MereTDD
 
 #define MERETDD_CLASS_FINAL(line) Test ## line
