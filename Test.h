@@ -5,22 +5,9 @@
 #include <ostream>
 #include <string_view>
 #include <vector>
+#include "ConfirmException.h"
 
 namespace MereTDD {
-    class ConfirmException {
-    public:
-        ConfirmException(int line) : mLine(line) {}
-        virtual ~ConfirmException() = default;
-        std::string_view reason() const {
-            return mReason;
-        }
-        int line() const { return mLine; }
-
-    protected:
-        std::string mReason;
-        int mLine;
-    };
-
     class BoolConfirmException : public ConfirmException {
     public:
         BoolConfirmException(bool expected, int line) : ConfirmException(line) {
